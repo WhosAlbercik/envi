@@ -6,6 +6,7 @@ import whosalbercik.envi.obj.Quest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class QuestRegistry {
     private static final HashMap<String, Quest> values = new HashMap<String, Quest>();
@@ -33,4 +34,14 @@ public class QuestRegistry {
         }
         return quests;
     }
+
+    public static List<Quest> getQuests() {
+        ArrayList<Quest> quests = new ArrayList<Quest>();
+
+        values.forEach((id, quest) -> {
+            quests.add(quest);
+        });
+        return quests.stream().toList();
+    }
+
 }

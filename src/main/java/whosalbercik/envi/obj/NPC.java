@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -43,6 +44,9 @@ public class NPC {
         CompoundTag persistantData = p.getPersistentData();
         ListTag completedQuests = (ListTag) persistantData.get("envi.completedQuests");
 
+        if (completedQuests == null && !requiredQuests.isEmpty())  return false;
+        else if(requiredQuests.isEmpty()) return true;
+
         ArrayList<String> completedQuestsStrings = new ArrayList<>();
 
         completedQuests.forEach((tag) -> completedQuestsStrings.add(tag.getAsString()));
@@ -58,7 +62,7 @@ public class NPC {
         }
 
         return true;
-    };
+    }
 
 
     public Collection<String> getMissing(Player p) {
@@ -78,15 +82,20 @@ public class NPC {
         }
 
         return missing;
-    };
+    }
 
     public void spawnNPC(BlockPos pos, Level level) {
         Villager mob = new Villager(EntityType.VILLAGER, level);
         mob.setVillagerData(mob.getVillagerData().setProfession(profession));
+
+        mob.setCustomName(Component.literal(displayname));
         addTagsFromAttributes(mob);
 
         level.addFreshEntity(mob);
+
         mob.moveTo(pos.getCenter());
+
+
     }
 
     private void addTagsFromAttributes(Villager mob) {
