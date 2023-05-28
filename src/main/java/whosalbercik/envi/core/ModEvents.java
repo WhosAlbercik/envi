@@ -7,6 +7,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
+import whosalbercik.envi.registry.TradeRegistry;
 
 @Mod.EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD, value = Dist.DEDICATED_SERVER)
 public class ModEvents {
@@ -14,6 +15,7 @@ public class ModEvents {
     public static void commonSetup(FMLDedicatedServerSetupEvent event) {
         NPCRegistry.load();
         QuestRegistry.load();
+        TradeRegistry.load();
         ModPacketHandler.register();
 
     }

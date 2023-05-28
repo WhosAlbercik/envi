@@ -10,6 +10,7 @@ import whosalbercik.envi.gui.QuestScreen;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
+import whosalbercik.envi.registry.TradeRegistry;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
@@ -28,6 +29,7 @@ public class ClientModEvents {
     public static void commonSetup(FMLCommonSetupEvent event) {
         NPCRegistry.load();
         QuestRegistry.load();
+        TradeRegistry.load();
         ModPacketHandler.register();
 
     }

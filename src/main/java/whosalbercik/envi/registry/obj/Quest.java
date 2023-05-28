@@ -74,10 +74,26 @@ public class Quest {
             if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant"))) != null) {
                 this.icon.enchant(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant")))), enchantData.get("level"));
             }
+
+
         }
 
         for (Config itemstackData: (ArrayList<Config>) questData.get("input")) {
             ItemStack inputStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemstackData.get("item"))), itemstackData.get("amount"));
+
+
+            // enchant input
+            if (itemstackData.get("enchanted") != null) {
+                Config enchantData = itemstackData.get("enchanted");
+
+                if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant"))) != null) {
+                    inputStack.enchant(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant")))), enchantData.get("level") == null ? 1 : enchantData.get("level"));
+                }
+            }
+
+            if (itemstackData.get("durability") != null) {
+                inputStack.getOrCreateTag().put("durability", IntTag.valueOf(itemstackData.get("durability")));
+            }
 
             input.add(inputStack);
         }
@@ -202,15 +218,15 @@ public class Quest {
 
         // if quest is in progress
         if (id.equals(p.getPersistentData().getString("envi.currentQuest"))) {
-            name = Component.translatable(title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#00d9fe")));
+            name = Component.translatable("[QUEST] " + title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#00d9fe")));
             stack.setHoverName(name);
         }
         // if completed
         else if (p.getPersistentData().getList("envi.completedQuests", 8).contains(StringTag.valueOf(id))){
-            stack.setHoverName(Component.translatable(title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#0edd00"))));
+            stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#0edd00"))));
         }
         else {
-            stack.setHoverName(Component.translatable(title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#fefd0b"))));
+            stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#fefd0b"))));
         }
 
         return stack;

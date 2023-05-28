@@ -2,6 +2,7 @@ package whosalbercik.envi.registry.obj;
 
 import com.electronwill.nightconfig.core.Config;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -14,6 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Trade extends Quest{
 
@@ -35,31 +37,54 @@ public class Trade extends Quest{
         }
     }
 
+
     @Override
     protected boolean loadAttributesFromConfig() {
-        Config data = ServerConfig.TRADES.get().get(id);
-        if (data == null) {
+        Config questData = ServerConfig.TRADES.get().get(id);
+        if (questData == null) {
             return false;}
 
-        this.title = data.get("title");
+        this.title = questData.get("title");
+
 
         this.input = new ArrayList<ItemStack>();
         this.output = new ArrayList<ItemStack>();
 
-        this.icon = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(((String) data.get("icon")).split(":")[0], ((String) data.get("icon")).split(":")[1])));
+        this.icon = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(questData.get("icon"))));
 
-        for (Config itemstackData: (ArrayList<Config>) data.get("input")) {
-            input.add(new ItemStack(
-                    ForgeRegistries.ITEMS.getValue(new ResourceLocation(((String)itemstackData.get("item")).split(":")[0], ((String)itemstackData.get("item")).split(":")[1])),
-                    itemstackData.get("amount")
-            ));
+
+        // if icon is enchanted
+        if (questData.get("enchanted") != null) {
+            Config enchantData = questData.get("enchanted");
+
+            if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant"))) != null) {
+                this.icon.enchant(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant")))), enchantData.get("level"));
+            }
         }
 
-        for (Config itemstackData: (ArrayList<Config>) data.get("output")) {
-            output.add(new ItemStack(
-                    ForgeRegistries.ITEMS.getValue(new ResourceLocation(((String)itemstackData.get("item")).split(":")[0], ((String)itemstackData.get("item")).split(":")[1])),
-                    itemstackData.get("amount")
-            ));
+        for (Config itemstackData: (ArrayList<Config>) questData.get("input")) {
+            ItemStack inputStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemstackData.get("item"))), itemstackData.get("amount"));
+
+            input.add(inputStack);
+        }
+
+        for (Config itemstackData: (ArrayList<Config>) questData.get("output")) {
+            ItemStack outputStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemstackData.get("item"))), itemstackData.get("amount"));
+
+            // enchant output
+            if (itemstackData.get("enchanted") != null) {
+                Config enchantData = itemstackData.get("enchanted");
+
+                if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant"))) != null) {
+                    outputStack.enchant(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantData.get("enchant")))), enchantData.get("level") == null ? 1 : enchantData.get("level"));
+                }
+            }
+
+            if (itemstackData.get("durability") != null) {
+                outputStack.getOrCreateTag().put("durability", IntTag.valueOf(itemstackData.get("durability")));
+            }
+
+            output.add(outputStack);
         }
 
         return id != null && title != null && input != null && output != null && icon != null;
@@ -73,10 +98,14 @@ public class Trade extends Quest{
         stack.addTagElement("envi.type", StringTag.valueOf("trade"));
         stack.addTagElement("envi.id", StringTag.valueOf(id));
 
-        MutableComponent name;
-        stack.setHoverName(Component.translatable(title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#ff00fd"))));
+        stack.setHoverName(Component.translatable("[TRADE] " + title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#ff00fd"))));
 
         return stack;
+    }
+
+    @Override
+    public void iconClicked(LocalPlayer p) {
+
     }
 
     @Override

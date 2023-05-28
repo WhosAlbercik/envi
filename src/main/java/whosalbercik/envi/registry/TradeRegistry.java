@@ -10,7 +10,7 @@ import java.util.Collection;
 public class TradeRegistry {
 
     public static void load() {
-        for (String questId: ServerConfig.QUESTS.get().valueMap().keySet()) {
+        for (String questId: ServerConfig.TRADES.get().valueMap().keySet()) {
             addTrade(questId, Trade.load(questId));
         }
 
