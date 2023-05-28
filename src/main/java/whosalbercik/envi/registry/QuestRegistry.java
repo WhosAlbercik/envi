@@ -1,7 +1,7 @@
 package whosalbercik.envi.registry;
 
 import whosalbercik.envi.config.ServerConfig;
-import whosalbercik.envi.obj.Quest;
+import whosalbercik.envi.registry.obj.Quest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class QuestRegistry {
-    private static final HashMap<String, Quest> values = new HashMap<String, Quest>();
+    protected static final HashMap<String, Quest> values = new HashMap<String, Quest>();
 
     public static void load() {
         for (String questId: ServerConfig.QUESTS.get().valueMap().keySet()) {

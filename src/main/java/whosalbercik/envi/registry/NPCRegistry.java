@@ -1,7 +1,7 @@
 package whosalbercik.envi.registry;
 
 import whosalbercik.envi.config.ServerConfig;
-import whosalbercik.envi.obj.NPC;
+import whosalbercik.envi.registry.obj.NPC;
 
 import java.util.HashMap;
 

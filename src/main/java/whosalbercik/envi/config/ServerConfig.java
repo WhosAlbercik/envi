@@ -12,6 +12,8 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec.ConfigValue<Config> NPCS;
     public static final ForgeConfigSpec.ConfigValue<Config> QUESTS;
+    public static final ForgeConfigSpec.ConfigValue<Config> TRADES;
+
 
 
 
@@ -21,6 +23,8 @@ public class ServerConfig {
         NPCS = BUILDER.define("npcs", TomlFormat.newConfig(HashMap::new));
 
         QUESTS = BUILDER.define("quests", TomlFormat.newConfig(HashMap::new));
+
+        TRADES = BUILDER.define("trades", TomlFormat.newConfig(HashMap::new));
 
 
         SPEC = BUILDER.build();

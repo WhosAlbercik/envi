@@ -5,7 +5,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import whosalbercik.envi.obj.Quest;
+import whosalbercik.envi.registry.obj.Quest;
 import whosalbercik.envi.registry.QuestRegistry;
 
 import java.util.function.Supplier;
@@ -35,7 +35,7 @@ public class CompleteQuestCS2Packet {
 
             // remove input
             quest.getInput().forEach(input -> {
-                p.getInventory().clearOrCountMatchingItems((itemstack) -> {return input.getItem().equals(itemstack.getItem());}, input.getCount(), p.getInventory());
+                p.getInventory().clearOrCountMatchingItems((itemstack) -> input.getItem().equals(itemstack.getItem()), input.getCount(), p.getInventory());
             });
 
             // add output

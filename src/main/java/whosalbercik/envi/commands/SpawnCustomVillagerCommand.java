@@ -7,7 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import whosalbercik.envi.obj.NPC;
+import whosalbercik.envi.registry.obj.NPC;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
 

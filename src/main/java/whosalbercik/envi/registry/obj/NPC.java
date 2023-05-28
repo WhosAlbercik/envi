@@ -1,4 +1,4 @@
-package whosalbercik.envi.obj;
+package whosalbercik.envi.registry.obj;
 
 import com.electronwill.nightconfig.core.Config;
 import net.minecraft.core.BlockPos;
