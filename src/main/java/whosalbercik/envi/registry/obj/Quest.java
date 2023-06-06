@@ -1,6 +1,7 @@
 package whosalbercik.envi.registry.obj;
 
 import com.electronwill.nightconfig.core.Config;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,6 +34,11 @@ public class Quest {
 
     String description;
 
+    Integer completeLimit;
+
+    public Integer getCompleteLimit() {
+        return completeLimit;
+    }
 
 
     String completeMessage;
@@ -60,6 +67,9 @@ public class Quest {
         this.title = questData.get("title");
         this.description = questData.get("description");
         this.completeMessage = questData.get("completeMessage");
+
+        this.completeLimit = questData.get("completeLimit") == null ? -1 : questData.get("completeLimit");
+
 
         this.input = new ArrayList<ItemStack>();
         this.output = new ArrayList<ItemStack>();
@@ -117,7 +127,7 @@ public class Quest {
             output.add(outputStack);
         }
 
-        return id != null && title != null && description != null && input != null && output != null && icon != null && completeMessage != null;
+        return id != null && title != null && description != null && input != null && output != null && icon != null && completeMessage != null && completeLimit != null;
     }
 
     public ItemStack getBook() {
@@ -202,12 +212,17 @@ public class Quest {
     }
 
     public void complete(LocalPlayer p) {
+        // counts how many times player completed quest
+        int playerCount = p.getPersistentData().getInt("envi.questCount." + id);
+        playerCount++;
+
+        p.getPersistentData().putInt("envi.questCount." + id, playerCount);
         p.getPersistentData().getList("envi.completedQuests", 8).add(StringTag.valueOf(id));
         p.getPersistentData().putString("envi.currentQuest", "");
         ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(id));
     }
 
-    public ItemStack getIcon(Player p) {
+    public ItemStack getIcon(ServerPlayer p) {
         ItemStack stack = icon.copy();
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
@@ -221,13 +236,21 @@ public class Quest {
             name = Component.translatable("[QUEST] " + title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#00d9fe")));
             stack.setHoverName(name);
         }
-        // if completed
-        else if (p.getPersistentData().getList("envi.completedQuests", 8).contains(StringTag.valueOf(id))){
-            stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#0edd00"))));
-        }
+
         else {
-            stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#fefd0b"))));
+            // limit achieved
+            if (completeLimit <= p.getPersistentData().getInt("envi.questCount") && completeLimit != -1) {
+                stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#0edd00"))));
+
+            } else {
+                // not achieved and not started
+                stack.setHoverName(Component.translatable("[QUEST] " +title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#fefd0b"))));
+            }
+
         }
+
+
+
 
         return stack;
     }
@@ -247,13 +270,15 @@ public class Quest {
             }
             return;
         }
-        // quest already completed
-        else if (p.getPersistentData().getList("envi.completedQuests", 8) != null && p.getPersistentData().getList("envi.completedQuests", 8).contains(StringTag.valueOf(id))) {
-            return;
-        }
-
         // set new Quest
         else {
+            // limit achieved
+            if (completeLimit <= p.getPersistentData().getInt("envi.questCount." + id)) {
+                p.closeContainer();
+                p.sendSystemMessage(Component.literal("Max usages for this quest have been achieved!").withStyle(ChatFormatting.RED));
+                return;
+            }
+
 
             p.closeContainer();
             Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(getBook())));

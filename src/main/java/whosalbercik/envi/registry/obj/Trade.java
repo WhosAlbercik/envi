@@ -5,11 +5,10 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
@@ -91,7 +90,7 @@ public class Trade extends Quest{
     }
 
     @Override
-    public ItemStack getIcon(Player p) {
+    public ItemStack getIcon(ServerPlayer p) {
         ItemStack stack = icon.copy();
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));

@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.AirItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import whosalbercik.envi.registry.obj.Quest;
@@ -49,6 +50,9 @@ public class QuestScreen extends AbstractContainerScreen<QuestMenu> implements M
     @Override
     protected void slotClicked(Slot slotClicked, int slotIndex, int p_97780_, ClickType type) {
         assert slotClicked != null;
+
+        if (slotClicked.getItem().getItem() instanceof AirItem) return;
+
         LocalPlayer p = Minecraft.getInstance().player;
         Quest questClicked = QuestRegistry.getQuest(slotClicked.getItem().getTag().getString("envi.id"));
 

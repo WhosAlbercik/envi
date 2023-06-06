@@ -11,7 +11,7 @@ import whosalbercik.envi.registry.QuestRegistry;
 import java.util.function.Supplier;
 
 public class CompleteQuestCS2Packet {
-    private String questID;
+    private final String questID;
 
     public CompleteQuestCS2Packet(String questID) {
         this.questID = questID;
@@ -47,6 +47,13 @@ public class CompleteQuestCS2Packet {
 
             p.getPersistentData().put("envi.completedQuests", tag);
             p.getPersistentData().putString("envi.currentQuest", "");
+
+
+            // add 1 to how many times quest completed
+            int playerCount = p.getPersistentData().getInt("envi.questCount." + quest.getId());
+            playerCount++;
+
+            p.getPersistentData().putInt("envi.questCount." + quest.getId(), playerCount);
 
         });
         return true;

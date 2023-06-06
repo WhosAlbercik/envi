@@ -1,5 +1,6 @@
 package whosalbercik.envi.gui;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,7 +12,7 @@ import whosalbercik.envi.registry.obj.Quest;
 import java.util.ArrayList;
 
 public class QuestMenu extends ChestMenu {
-    private ArrayList<Quest> quests = new ArrayList<Quest>();
+    private final ArrayList<Quest> quests = new ArrayList<Quest>();
 
     public QuestMenu(int id, Inventory playerInv) {
         super(ModMenus.QUEST_MENU.get(), id, playerInv, new SimpleContainer(54), 6);
@@ -22,7 +23,7 @@ public class QuestMenu extends ChestMenu {
     }
 
     public void addQuest(Quest quest, Player player) {
-        ((SimpleContainer) this.getContainer()).addItem(quest.getIcon(player));
+        ((SimpleContainer) this.getContainer()).addItem(quest.getIcon((ServerPlayer) player));
 
         quests.add(quest);
     }
