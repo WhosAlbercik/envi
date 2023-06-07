@@ -48,10 +48,7 @@ public class ModForgeEvents {
 
             QuestMenu menu = new QuestMenu(1, p.getInventory(), abstractContainer);
 
-            // adding 'quests' to container
-            for (Quest quest: quests) {
-                menu.addQuest(quest, p);
-            }
+            menu.addQuests(quests, p);
 
 
             MenuConstructor constructor = (p_39954_, p_39955_, p_39956_) -> menu;

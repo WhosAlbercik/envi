@@ -8,6 +8,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import whosalbercik.envi.ENVI;
 import whosalbercik.envi.networking.CompleteQuestCS2Packet;
+import whosalbercik.envi.networking.CompleteTradeCS2Packet;
 import whosalbercik.envi.networking.SetQuestCS2Packet;
 
 
@@ -39,6 +40,12 @@ public class ModPacketHandler {
                 .decoder(CompleteQuestCS2Packet::decode)
                 .encoder(CompleteQuestCS2Packet::encode)
                 .consumerMainThread(CompleteQuestCS2Packet::handle)
+                .add();
+
+        net.messageBuilder(CompleteTradeCS2Packet.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(CompleteTradeCS2Packet::decode)
+                .encoder(CompleteTradeCS2Packet::encode)
+                .consumerMainThread(CompleteTradeCS2Packet::handle)
                 .add();
 
         INSTANCE = net;

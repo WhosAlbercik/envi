@@ -54,10 +54,13 @@ public class QuestScreen extends AbstractContainerScreen<QuestMenu> implements M
         if (slotClicked.getItem().getItem() instanceof AirItem) return;
 
         LocalPlayer p = Minecraft.getInstance().player;
-        Quest questClicked = QuestRegistry.getQuest(slotClicked.getItem().getTag().getString("envi.id"));
+        Quest questClicked = QuestRegistry.getQuest(slotClicked.getItem().getOrCreateTag().getString("envi.id"));
+
+        if (questClicked == null) {
+            return;
+        }
 
         questClicked.iconClicked(p);
-
 
     }
 }

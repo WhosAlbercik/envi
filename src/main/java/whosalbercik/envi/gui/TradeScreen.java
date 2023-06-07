@@ -2,7 +2,9 @@ package whosalbercik.envi.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -10,6 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import whosalbercik.envi.registry.TradeRegistry;
+import whosalbercik.envi.registry.obj.Trade;
+
 
 public class TradeScreen extends AbstractContainerScreen<TradeMenu> implements MenuAccess<TradeMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
@@ -40,7 +46,25 @@ public class TradeScreen extends AbstractContainerScreen<TradeMenu> implements M
     }
 
     @Override
-    protected void slotClicked(Slot p_97778_, int p_97779_, int p_97780_, ClickType p_97781_) {
-        super.slotClicked(p_97778_, p_97779_, p_97780_, p_97781_);
+    protected void slotClicked(Slot slot, int slotIndex, int p_97780_, ClickType clickType) {
+        if (slot == null) {
+            return;
+        }
+
+        ItemStack clicked = slot.getItem();
+
+        if (clicked.getOrCreateTag().getInt("envi.tradeMultiplier") != 0) {
+            Trade trade = TradeRegistry.getTrade(clicked.getTag().getString("envi.id"));
+
+            int multiplier = clicked.getTag().getInt("envi.tradeMultiplier");
+
+            if (trade.hasRequiredItems(Minecraft.getInstance().player, multiplier)) {
+                trade.complete(Minecraft.getInstance().player, multiplier);
+            } else {
+                Minecraft.getInstance().player.closeContainer();
+                Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(trade.notCompletedQuestBook(multiplier))));
+            }
+
+        }
     }
 }

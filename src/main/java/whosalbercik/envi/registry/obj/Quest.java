@@ -13,7 +13,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -222,7 +221,7 @@ public class Quest {
         ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(id));
     }
 
-    public ItemStack getIcon(ServerPlayer p) {
+    public ItemStack getIcon(Player p) {
         ItemStack stack = icon.copy();
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
@@ -251,6 +250,16 @@ public class Quest {
 
 
 
+
+        return stack;
+    }
+
+    public ItemStack getIcon() {
+        ItemStack stack = icon.copy();
+
+        stack.addTagElement("envi.gui", StringTag.valueOf("true"));
+        stack.addTagElement("envi.type", StringTag.valueOf("quest"));
+        stack.addTagElement("envi.id", StringTag.valueOf(id));
 
         return stack;
     }
