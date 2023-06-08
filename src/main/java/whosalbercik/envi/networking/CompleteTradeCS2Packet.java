@@ -47,7 +47,7 @@ public class CompleteTradeCS2Packet {
 
             // add 1 to how many times quest completed
             int playerCount = p.getPersistentData().getInt("envi.questCount." + trade.getId());
-            playerCount++;
+            playerCount += multiplier;
 
             p.getPersistentData().putInt("envi.questCount." + trade.getId(), playerCount);
 

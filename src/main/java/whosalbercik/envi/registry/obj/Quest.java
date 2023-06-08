@@ -282,7 +282,7 @@ public class Quest {
         // set new Quest
         else {
             // limit achieved
-            if (completeLimit <= p.getPersistentData().getInt("envi.questCount." + id)) {
+            if (completeLimit < p.getPersistentData().getInt("envi.questCount." + id)) {
                 p.closeContainer();
                 p.sendSystemMessage(Component.literal("Max usages for this quest have been achieved!").withStyle(ChatFormatting.RED));
                 return;

@@ -119,7 +119,7 @@ public class Trade extends Quest{
     public void iconClicked(LocalPlayer p) {
 
         // limit achieved
-        if (completeLimit <= p.getPersistentData().getInt("envi.questCount." + id) && completeLimit != -1) {
+        if (completeLimit < p.getPersistentData().getInt("envi.questCount." + id) + 1 && completeLimit != -1) {
             p.closeContainer();
             p.sendSystemMessage(Component.literal("Max usages for this quest have been achieved!").withStyle(ChatFormatting.RED));
             return;
@@ -131,11 +131,6 @@ public class Trade extends Quest{
         TradeMenu menu = new TradeMenu(1, p.getInventory(), abstractContainer, this);
 
         menu.addIcons();
-
-        MenuConstructor constructor = (p_39954_, p_39955_, p_39956_) -> menu;
-
-        SimpleMenuProvider gui = new SimpleMenuProvider(constructor, Component.literal(this.title));
-
 
         p.closeContainer();
         Minecraft.getInstance().setScreen(new TradeScreen(menu, p.getInventory(), Component.literal(this.title)));
@@ -164,7 +159,7 @@ public class Trade extends Quest{
     public void complete(LocalPlayer p, int multiplier) {
         // counts how many times player completed quest
         int playerCount = p.getPersistentData().getInt("envi.questCount." + id);
-        playerCount++;
+        playerCount += multiplier;
 
         p.getPersistentData().putInt("envi.questCount." + id, playerCount);
 

@@ -2,6 +2,7 @@ package whosalbercik.envi.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
@@ -57,6 +58,13 @@ public class TradeScreen extends AbstractContainerScreen<TradeMenu> implements M
             Trade trade = TradeRegistry.getTrade(clicked.getTag().getString("envi.id"));
 
             int multiplier = clicked.getTag().getInt("envi.tradeMultiplier");
+
+            if (trade.getCompleteLimit() < Minecraft.getInstance().player.getPersistentData().getInt("envi.questCount." + trade.getId()) + multiplier && trade.getCompleteLimit() != -1) {
+                Minecraft.getInstance().player.closeContainer();
+                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Completing this transaction would break the usage limit of this trade!").withStyle(ChatFormatting.RED));
+                return;
+            }
+
 
             if (trade.hasRequiredItems(Minecraft.getInstance().player, multiplier)) {
                 trade.complete(Minecraft.getInstance().player, multiplier);
