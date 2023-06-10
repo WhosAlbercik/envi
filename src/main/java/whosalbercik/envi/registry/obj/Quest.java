@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 import whosalbercik.envi.config.ServerConfig;
@@ -26,17 +27,15 @@ import whosalbercik.envi.networking.SetQuestCS2Packet;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Quest {
-    String id;
+public class Quest extends RegistryObject<Quest> {
     String title;
-
 
     String description;
 
     Integer completeLimit;
 
-    public Integer getCompleteLimit() {
-        return completeLimit;
+    protected Quest(String id, Class<? extends Quest> type, ForgeConfigSpec.ConfigValue<Config> config) {
+        super(id, (Class<Quest>) type, config);
     }
 
 
@@ -46,17 +45,7 @@ public class Quest {
     ArrayList<ItemStack> output;
     ItemStack icon;
 
-    protected Quest(String id) {this.id = id;}
-    public static Quest load(String id) {
-        Quest obj = new Quest(id);
 
-        if (obj.loadAttributesFromConfig()) {
-            return obj;
-        }
-        else {
-            return null;
-        }
-    }
 
     protected boolean loadAttributesFromConfig() {
         Config questData = ServerConfig.QUESTS.get().get(id);
@@ -298,6 +287,9 @@ public class Quest {
 
     }
 
+    public Integer getCompleteLimit() {
+        return completeLimit;
+    }
 
     public String getTitle() {
         return title;

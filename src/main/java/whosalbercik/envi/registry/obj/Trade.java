@@ -12,11 +12,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.gui.TradeMenu;
@@ -32,20 +31,11 @@ public class Trade extends Quest{
     final String description = null;
     final String completeMessage = null;
 
-    protected Trade(String id) {
-        super(id);
+    protected Trade(String id, Class<Trade> type, ForgeConfigSpec.ConfigValue<Config> config) {
+        super(id, type, config);
     }
 
-    public static Trade load(String id) {
-        Trade obj = new Trade(id);
 
-        if (obj.loadAttributesFromConfig()) {
-            return obj;
-        }
-        else {
-            return null;
-        }
-    }
 
 
     @Override

@@ -2,6 +2,7 @@ package whosalbercik.envi.registry;
 
 import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.registry.obj.NPC;
+import whosalbercik.envi.registry.obj.Registry;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ public final class NPCRegistry {
 
     public static void load() {
         for (String npcId: ServerConfig.NPCS.get().valueMap().keySet()) {
-            addNPC(npcId, NPC.load(npcId));
+            addNPC(npcId, (NPC) Registry.load(npcId, NPC.class, ServerConfig.NPCS));
         }
 
     }

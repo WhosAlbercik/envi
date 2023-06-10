@@ -2,6 +2,7 @@ package whosalbercik.envi.registry;
 
 import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.registry.obj.Quest;
+import whosalbercik.envi.registry.obj.Registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,8 @@ public class QuestRegistry {
 
     public static void load() {
         for (String questId: ServerConfig.QUESTS.get().valueMap().keySet()) {
-            addQuest(questId, Quest.load(questId));
+            addQuest(questId, (Quest) Registry.load(questId, Quest.class, ServerConfig.QUESTS));
+
         }
 
     }

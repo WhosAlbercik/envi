@@ -11,34 +11,23 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class NPC {
+public class NPC extends RegistryObject<NPC> {
     private String displayname;
-    private final String id;
     private ArrayList<String> requiredQuests;
     private ArrayList<String> quests;
     private VillagerProfession profession = VillagerProfession.NONE;
 
-
-    private NPC(String id) {
-        this.id = id;
+    protected NPC(String id, Class<NPC> type, ForgeConfigSpec.ConfigValue<Config> config) {
+        super(id, type, config);
     }
 
-    public static NPC load(String id) {
-        NPC obj = new NPC(id);
-
-        if (obj.loadAttributesFromConfig()) {
-            return obj;
-        }
-        else {
-            return null;
-        }
-    }
 
     public boolean hasRequired(Player p) {
         CompoundTag persistantData = p.getPersistentData();
@@ -122,7 +111,7 @@ public class NPC {
 
     }
 
-    private boolean loadAttributesFromConfig() {
+    protected boolean loadAttributesFromConfig() {
         Config data = ServerConfig.NPCS.get().get(id);
         if (data == null) {
             return false;}

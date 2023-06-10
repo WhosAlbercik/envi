@@ -2,6 +2,7 @@ package whosalbercik.envi.registry;
 
 import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.registry.obj.Quest;
+import whosalbercik.envi.registry.obj.Registry;
 import whosalbercik.envi.registry.obj.Trade;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class TradeRegistry {
 
     public static void load() {
         for (String questId: ServerConfig.TRADES.get().valueMap().keySet()) {
-            addTrade(questId, Trade.load(questId));
+            addTrade(questId, (Trade) Registry.load(questId, Trade.class, ServerConfig.TRADES));
         }
 
     }
