@@ -7,9 +7,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import whosalbercik.envi.ENVI;
-import whosalbercik.envi.networking.CompleteQuestCS2Packet;
-import whosalbercik.envi.networking.CompleteTradeCS2Packet;
-import whosalbercik.envi.networking.SetQuestCS2Packet;
+import whosalbercik.envi.networking.*;
 
 
 public class ModPacketHandler {
@@ -47,6 +45,19 @@ public class ModPacketHandler {
                 .encoder(CompleteTradeCS2Packet::encode)
                 .consumerMainThread(CompleteTradeCS2Packet::handle)
                 .add();
+
+        net.messageBuilder(IconClickedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(IconClickedC2SPacket::decode)
+                .encoder(IconClickedC2SPacket::encode)
+                .consumerMainThread(IconClickedC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(OpenBookS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(OpenBookS2CPacket::decode)
+                .encoder(OpenBookS2CPacket::encode)
+                .consumerMainThread(OpenBookS2CPacket::handle)
+                .add();
+
 
         INSTANCE = net;
     }

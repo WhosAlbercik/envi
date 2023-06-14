@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +24,7 @@ import whosalbercik.envi.gui.TradeScreen;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteTradeCS2Packet;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -93,7 +95,7 @@ public class Trade extends Quest{
     }
 
     @Override
-    public ItemStack getIcon(Player p) {
+    public ItemStack getIcon(ServerPlayer p) {
         ItemStack stack = icon.copy();
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
@@ -106,7 +108,7 @@ public class Trade extends Quest{
     }
 
     @Override
-    public void iconClicked(LocalPlayer p) {
+    public void iconClicked(ServerPlayer p) {
 
         // limit achieved
         if (completeLimit < p.getPersistentData().getInt("envi.questCount." + id) + 1 && completeLimit != -1) {
@@ -146,13 +148,7 @@ public class Trade extends Quest{
         this.complete(p, 1);
     }
 
-    public void complete(LocalPlayer p, int multiplier) {
-        // counts how many times player completed quest
-        int playerCount = p.getPersistentData().getInt("envi.questCount." + id);
-        playerCount += multiplier;
-
-        p.getPersistentData().putInt("envi.questCount." + id, playerCount);
-
+    public void complete(@Nullable LocalPlayer p, int multiplier) {
         ModPacketHandler.sendToServer(new CompleteTradeCS2Packet(id, multiplier));
     }
 

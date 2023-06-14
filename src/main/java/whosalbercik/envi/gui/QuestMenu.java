@@ -1,5 +1,6 @@
 package whosalbercik.envi.gui;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +27,7 @@ public class QuestMenu extends ChestMenu {
     public void addQuests(ArrayList<Quest> quests, Player player) {
         SimpleContainer container = (SimpleContainer) this.getContainer();
         for (Quest quest: quests) {
-            container.setItem(10 + (quests.indexOf(quest) == 7 ? 8 : quests.indexOf(quest)), quest.getIcon(player));
+            container.setItem(10 + (quests.indexOf(quest) == 7 ? 8 : quests.indexOf(quest)), quest.getIcon((ServerPlayer) player));
         }
 
         // decor

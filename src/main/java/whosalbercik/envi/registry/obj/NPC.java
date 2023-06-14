@@ -8,11 +8,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
 
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ public class NPC extends RegistryObject<NPC> {
     private String displayname;
     private ArrayList<String> requiredQuests;
     private ArrayList<String> quests;
-    private VillagerProfession profession = VillagerProfession.NONE;
 
     protected NPC(String id, Class<NPC> type, ForgeConfigSpec.ConfigValue<Config> config) {
         super(id, type, config);
@@ -75,7 +72,6 @@ public class NPC extends RegistryObject<NPC> {
 
     public void spawnNPC(BlockPos pos, Level level) {
         Villager mob = new Villager(EntityType.VILLAGER, level);
-        mob.setVillagerData(mob.getVillagerData().setProfession(profession));
 
         mob.setCustomName(Component.literal(displayname));
         addTagsFromAttributes(mob);
@@ -107,7 +103,6 @@ public class NPC extends RegistryObject<NPC> {
             questsTag.add(StringTag.valueOf(quest));
         }
         mob.getPersistentData().put("envi.quests", requiredQuestsTag);
-        mob.getPersistentData().putString("envi.profession", profession.name());
 
     }
 
@@ -120,19 +115,9 @@ public class NPC extends RegistryObject<NPC> {
         this.quests = data.get("quests");
         this.displayname = data.get("displayname");
 
-        this.profession = getProfessionFromValue(data.get("profession"));
-
-        return id != null && requiredQuests != null && displayname != null && quests != null && profession != null;
+        return id != null && requiredQuests != null && displayname != null && quests != null;
     }
 
-    private VillagerProfession getProfessionFromValue(String value) {
-        for (VillagerProfession prof: ForgeRegistries.VILLAGER_PROFESSIONS.getValues()) {
-            if (prof.name().equals(value.toLowerCase())) {
-                return prof;
-            }
-        }
-        return null;
-    }
 
     public String getDisplayname() {
         return displayname;
@@ -142,9 +127,6 @@ public class NPC extends RegistryObject<NPC> {
     }
     public ArrayList<String> getRequiredQuests() {
         return requiredQuests;
-    }
-    public VillagerProfession getProfession() {
-        return profession;
     }
     public ArrayList<String> getQuests() {
         return quests;

@@ -7,6 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.registry.obj.NPC;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
@@ -14,7 +15,7 @@ import whosalbercik.envi.registry.QuestRegistry;
 public class SpawnCustomVillagerCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> stack) {
-        stack.register(Commands.literal("scv")
+        stack.register(Commands.literal("scv").requires((ctx) -> ctx.hasPermission(ServerConfig.PERMISSION_LEVEL.get()))
                 .then(Commands.argument("npc", StringArgumentType.word()).executes(SpawnCustomVillagerCommand::spawnNPC)));
     }
 

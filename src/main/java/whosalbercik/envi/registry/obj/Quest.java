@@ -2,8 +2,6 @@ package whosalbercik.envi.registry.obj;
 
 import com.electronwill.nightconfig.core.Config;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -13,6 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,8 +21,10 @@ import org.apache.commons.lang3.StringUtils;
 import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteQuestCS2Packet;
+import whosalbercik.envi.networking.OpenBookS2CPacket;
 import whosalbercik.envi.networking.SetQuestCS2Packet;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -189,28 +190,19 @@ public class Quest extends RegistryObject<Quest> {
         return true;
     }
 
-    public void makeCurrent(LocalPlayer p) {
-        p.getPersistentData().putString("envi.currentQuest", id);
+    public void makeCurrent(@Nullable LocalPlayer p) {
         ModPacketHandler.sendToServer(new SetQuestCS2Packet(id));
     }
 
-    public static void setQuestNone(LocalPlayer p) {
-        p.getPersistentData().putString("envi.currentQuest", "");
+    public static void setQuestNone(@Nullable LocalPlayer p) {
         ModPacketHandler.sendToServer(new SetQuestCS2Packet(""));
     }
 
-    public void complete(LocalPlayer p) {
-        // counts how many times player completed quest
-        int playerCount = p.getPersistentData().getInt("envi.questCount." + id);
-        playerCount++;
-
-        p.getPersistentData().putInt("envi.questCount." + id, playerCount);
-        p.getPersistentData().getList("envi.completedQuests", 8).add(StringTag.valueOf(id));
-        p.getPersistentData().putString("envi.currentQuest", "");
+    public void complete(@Nullable LocalPlayer p) {
         ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(id));
     }
 
-    public ItemStack getIcon(Player p) {
+    public ItemStack getIcon(ServerPlayer p) {
         ItemStack stack = icon.copy();
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
@@ -253,18 +245,19 @@ public class Quest extends RegistryObject<Quest> {
         return stack;
     }
 
-    public void iconClicked(LocalPlayer p) {
+    public void iconClicked(ServerPlayer p) {
         // if clicked quest that is in progress
         if (p.getPersistentData().contains("envi.currentQuest") && p.getPersistentData().getString("envi.currentQuest").equals(id)) {
             p.closeContainer();
 
             // complete quest
             if (hasRequiredItems(p)) {
-                complete(p);
-                Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(completedQuestBook())));
+                complete(null);
+                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.COMPLETE), p);
 
             } else {
-                Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(notCompletedQuestBook())));
+                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.INCOMPLETE), p);
+
             }
             return;
         }
@@ -279,9 +272,9 @@ public class Quest extends RegistryObject<Quest> {
 
 
             p.closeContainer();
-            Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(getBook())));
+            ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.DESCRIPTION), p);
 
-            makeCurrent(p);
+            p.getPersistentData().putString("envi.currentQuest", id);
             return;
         }
 
