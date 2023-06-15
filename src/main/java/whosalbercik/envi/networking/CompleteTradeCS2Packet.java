@@ -1,9 +1,12 @@
 package whosalbercik.envi.networking;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.registry.TradeRegistry;
 import whosalbercik.envi.registry.obj.Trade;
 
@@ -36,6 +39,17 @@ public class CompleteTradeCS2Packet {
 
             ServerPlayer p = ctx.getSender();
             Trade trade = TradeRegistry.getTrade(tradeId);
+
+            if (trade.getCompleteLimit() < p.getPersistentData().getInt("envi.questCount." + trade.getId()) + multiplier) {
+                p.closeContainer();
+                p.sendSystemMessage(Component.literal("Completing this transaction would break the limit of completions for this quest!").withStyle(ChatFormatting.DARK_RED));
+                return;
+            }
+
+            if (!trade.hasRequiredItems(p, multiplier)) {
+                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(tradeId, OpenBookS2CPacket.BookType.INCOMPLETE), p);
+                return;
+            }
 
             // remove input
             trade.getInput().forEach(input -> {

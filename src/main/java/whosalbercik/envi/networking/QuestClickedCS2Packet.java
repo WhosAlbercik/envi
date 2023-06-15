@@ -6,23 +6,24 @@ import whosalbercik.envi.registry.QuestRegistry;
 import whosalbercik.envi.registry.TradeRegistry;
 import whosalbercik.envi.registry.obj.Quest;
 
+
 import java.util.function.Supplier;
 
-public class IconClickedC2SPacket {
+public class QuestClickedCS2Packet {
     private String questID;
 
-    public IconClickedC2SPacket(String questID) {
+    public QuestClickedCS2Packet(String questID) {
         this.questID = questID;
     }
 
-    public static void encode(IconClickedC2SPacket msg, FriendlyByteBuf buf) {
+    public static void encode(QuestClickedCS2Packet msg, FriendlyByteBuf buf) {
         buf.writeUtf(msg.questID);
     }
 
-    public static IconClickedC2SPacket decode(FriendlyByteBuf buf) {
+    public static QuestClickedCS2Packet decode(FriendlyByteBuf buf) {
         String id = buf.readUtf();
 
-        return new IconClickedC2SPacket(id);
+        return new QuestClickedCS2Packet(id);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -30,8 +31,8 @@ public class IconClickedC2SPacket {
         ctx.enqueueWork(() -> {
 
             Quest quest = QuestRegistry.getQuest(questID);
-
             if (quest == null) quest = TradeRegistry.getTrade(questID);
+
 
             quest.iconClicked(ctx.getSender());
         });

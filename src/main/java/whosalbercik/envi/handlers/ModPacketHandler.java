@@ -46,10 +46,10 @@ public class ModPacketHandler {
                 .consumerMainThread(CompleteTradeCS2Packet::handle)
                 .add();
 
-        net.messageBuilder(IconClickedC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(IconClickedC2SPacket::decode)
-                .encoder(IconClickedC2SPacket::encode)
-                .consumerMainThread(IconClickedC2SPacket::handle)
+        net.messageBuilder(QuestClickedCS2Packet.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(QuestClickedCS2Packet::decode)
+                .encoder(QuestClickedCS2Packet::encode)
+                .consumerMainThread(QuestClickedCS2Packet::handle)
                 .add();
 
         net.messageBuilder(OpenBookS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
@@ -58,6 +58,11 @@ public class ModPacketHandler {
                 .consumerMainThread(OpenBookS2CPacket::handle)
                 .add();
 
+        net.messageBuilder(OpenTradeS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(OpenTradeS2CPacket::decode)
+                .encoder(OpenTradeS2CPacket::encode)
+                .consumerMainThread(OpenTradeS2CPacket::handle)
+                .add();
 
         INSTANCE = net;
     }

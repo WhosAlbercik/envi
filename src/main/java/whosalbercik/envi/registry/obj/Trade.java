@@ -2,7 +2,6 @@ package whosalbercik.envi.registry.obj;
 
 import com.electronwill.nightconfig.core.Config;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
@@ -12,17 +11,15 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import whosalbercik.envi.config.ServerConfig;
-import whosalbercik.envi.gui.TradeMenu;
-import whosalbercik.envi.gui.TradeScreen;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteTradeCS2Packet;
+import whosalbercik.envi.networking.OpenTradeS2CPacket;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -117,15 +114,7 @@ public class Trade extends Quest{
             return;
         }
 
-        // abstract container that will hold all the gui elements
-        SimpleContainer abstractContainer = new SimpleContainer(54);
-
-        TradeMenu menu = new TradeMenu(1, p.getInventory(), abstractContainer, this);
-
-        menu.addIcons();
-
-        p.closeContainer();
-        Minecraft.getInstance().setScreen(new TradeScreen(menu, p.getInventory(), Component.literal(this.title)));
+        ModPacketHandler.sendToPlayer(new OpenTradeS2CPacket(this.id), p);
     }
 
     @Override

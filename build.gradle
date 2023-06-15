@@ -4,7 +4,7 @@ plugins {
 
 
 group = 'whosalbercik'
-version = '1.19.3-0.1.1.7'
+version = '1.19.3-0.1.1.8'
 
 java {
     archivesBaseName = 'envi'

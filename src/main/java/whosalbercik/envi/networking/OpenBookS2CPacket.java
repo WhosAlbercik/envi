@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class OpenBookS2CPacket {
 
-    private String questID;
-    private BookType type;
+    private final String questID;
+    private final BookType type;
 
     public OpenBookS2CPacket(String questID, BookType type) {
         this.questID = questID;
@@ -35,6 +35,20 @@ public class OpenBookS2CPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context ctx = supplier.get();
         ctx.enqueueWork(() -> {
+            Quest quest = QuestRegistry.getQuest(questID);
+
+            if (quest == null) quest = TradeRegistry.getTrade(questID);
+
+
+            Minecraft.getInstance().doRunTask(new OpenBook());
+        });
+        return true;
+    }
+
+    private class OpenBook implements Runnable {
+
+        @Override
+        public void run() {
 
             Quest quest = QuestRegistry.getQuest(questID);
 
@@ -42,15 +56,13 @@ public class OpenBookS2CPacket {
 
             switch (type) {
                 case DESCRIPTION -> Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(quest.getBook())));
-                case COMPLETE ->  Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(quest.completedQuestBook())));
+                case COMPLETE -> Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(quest.completedQuestBook())));
                 case INCOMPLETE -> Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(quest.notCompletedQuestBook())));
 
+
             }
-        });
-        return true;
+        }
     }
-
-
     public enum BookType {
         DESCRIPTION,
         COMPLETE,

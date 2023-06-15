@@ -13,7 +13,7 @@ public class ModMenus {
 
     public static final RegistryObject<MenuType<QuestMenu>> QUEST_MENU = MENUS.register("quest_menu", () -> new MenuType<QuestMenu>(QuestMenu::new));
 
-    public static final RegistryObject<MenuType<TradeMenu>> TRADE_MENU = MENUS.register("trade_menu", () -> new MenuType<TradeMenu>((id, playerInv) -> new TradeMenu(id, playerInv)));
+    public static final RegistryObject<MenuType<TradeMenu>> TRADE_MENU = MENUS.register("trade_menu", () -> new MenuType<TradeMenu>(TradeMenu::new));
 
 
 }

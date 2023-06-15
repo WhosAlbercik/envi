@@ -17,7 +17,7 @@ public class TradeMenu extends ChestMenu {
     private Trade trade;
 
     public TradeMenu(int id, Inventory playerInv) {
-        super(ModMenus.QUEST_MENU.get(), id, playerInv, new SimpleContainer(54), 6);
+        super(ModMenus.TRADE_MENU.get(), id, playerInv, new SimpleContainer(54), 6);
     }
 
     public TradeMenu(int id, Inventory playerinv, Container container, Trade trade) {

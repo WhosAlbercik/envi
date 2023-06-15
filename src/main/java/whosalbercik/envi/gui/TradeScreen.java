@@ -2,10 +2,7 @@ package whosalbercik.envi.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -14,6 +11,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.networking.CompleteTradeCS2Packet;
 import whosalbercik.envi.registry.TradeRegistry;
 import whosalbercik.envi.registry.obj.Trade;
 
@@ -59,19 +58,7 @@ public class TradeScreen extends AbstractContainerScreen<TradeMenu> implements M
 
             int multiplier = clicked.getTag().getInt("envi.tradeMultiplier");
 
-            if (trade.getCompleteLimit() < Minecraft.getInstance().player.getPersistentData().getInt("envi.questCount." + trade.getId()) + multiplier && trade.getCompleteLimit() != -1) {
-                Minecraft.getInstance().player.closeContainer();
-                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Completing this transaction would break the usage limit of this trade!").withStyle(ChatFormatting.RED));
-                return;
-            }
-
-
-            if (trade.hasRequiredItems(Minecraft.getInstance().player, multiplier)) {
-                trade.complete(Minecraft.getInstance().player, multiplier);
-            } else {
-                Minecraft.getInstance().player.closeContainer();
-                Minecraft.getInstance().setScreen(new BookViewScreen(new BookViewScreen.WrittenBookAccess(trade.notCompletedQuestBook(multiplier))));
-            }
+            ModPacketHandler.sendToServer(new CompleteTradeCS2Packet(trade.getId(), multiplier));
 
         }
     }

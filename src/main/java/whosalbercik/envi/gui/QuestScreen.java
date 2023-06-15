@@ -16,7 +16,7 @@ import net.minecraft.world.item.AirItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import whosalbercik.envi.handlers.ModPacketHandler;
-import whosalbercik.envi.networking.IconClickedC2SPacket;
+import whosalbercik.envi.networking.QuestClickedCS2Packet;
 import whosalbercik.envi.registry.obj.Quest;
 import whosalbercik.envi.registry.QuestRegistry;
 
@@ -62,7 +62,7 @@ public class QuestScreen extends AbstractContainerScreen<QuestMenu> implements M
             return;
         }
 
-        ModPacketHandler.sendToServer(new IconClickedC2SPacket(questClicked.getId()));
+        ModPacketHandler.sendToServer(new QuestClickedCS2Packet(questClicked.getId()));
 
     }
 }
