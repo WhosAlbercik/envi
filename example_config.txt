@@ -1,0 +1,132 @@
+commandPermission = 4
+
+[npcs]
+
+	# register an npc, 'tony' is the id of the npc
+	[npcs.tony]
+		# Nametag added to the npc
+		displayname = "Tony"
+		# Quests/trades that the npc will have
+		quests = ["getting_started", "currency", "tutorial"]
+		# Quests that the player has to complete to be able to spawn this npc
+		required = []
+
+[trades]
+
+	# register a trade, 'currency' is the id of the trade
+	[trades.currency]
+		# Shows in gui
+		title = "Currency"
+		# The icon of the trade, shows in gui
+		icon = "minecraft:gold_nugget"
+		# How many can this trade be completed, counter per player
+		completeLimit = 10
+
+		# can have a maximum of 5 types of input (gui limitations)
+		# register input
+		[[trades.currency.input]]
+			# registry name of item
+			item = "minecraft:rotten_flesh"
+			# cant be more than a stack
+			amount = 5
+
+		[[trades.currency.input]]
+			item = "minecraft:bone"
+			amount = 5
+
+		[[trades.currency.input]]
+			item = "minecraft:string"
+			amount = 3
+
+		# can have a maximum of 5 types of output (gui limitations)
+		# register output
+		[[trades.currency.output]]
+			# registry name of item
+			item = "minecraft:diamond"
+			# cant be more than a stack
+			amount = 1
+
+		[[trades.currency.output]]
+			item = "minecraft:gold_nugget"
+			amount = 4
+
+[quests]
+
+	# register a quest
+	[quests.getting_started]
+		# shows in gui
+		title = "Getting Started"
+		# Visible to player when quest accepted (max 3 pages of a mc book)
+		description = "This is the second quest. To complete it, bring me 10 rotten flesh, 5 bones, 3 gunpowder, and 1 string. If you do, you unlock trades and new quests!"
+		# Visible to player when quest finished (max 1 page of a mc book)
+		completeMessage = "Thanks"
+		# icon of the trade, shows in gui
+		icon = "minecraft:diamond_sword"
+		# how many times can quest be compeleted, counts per player
+		completeLimit = 5
+
+		# The icon can be enchanted
+		[quests.getting_started.enchanted]
+			enchant = "minecraft:silk_touch"
+			level = 3
+
+		# Register input, no limits here
+		[[quests.getting_started.input]]
+			displayname = "balls"
+			item = "minecraft:rotten_flesh"
+			amount = 10
+
+		# Register input, no limits here
+		[[quests.getting_started.output]]
+			item = "minecraft:diamond_pickaxe"
+			amount = 1
+			durability = 1000
+
+			# Should only enchant the stack that is higher
+			[quests.getting_started.output.enchanted]
+				enchant = "minecraft:sharpness"
+				level = 3
+
+		[[quests.getting_started.output]]
+			item = "minecraft:diamond_pickaxe"
+			amount = 1
+
+	# register a quest
+	[quests.tutorial]
+		# shows in gui
+		title = "Tutorial"
+		# Visible to player when quest accepted (max 3 pages of a mc book)
+		description = "This is the first quest. To complete it, bring me 10 rotten flesh, 5 bones, 3 gunpowder, and 1 string. If you do, you unlock trades and new quests!"
+		# Visible to player when quest finished (max 1 page of a mc book)
+		completeMessage = "Thanks"
+		# icon of the trade, shows in gui
+		icon = "minecraft:diamond_sword"
+		# how many times can quest be compeleted, counts per player
+		completeLimit = 5
+
+		# The icon can be enchanted
+		[quests.tutorial.enchanted]
+			enchant = "minecraft:silk_touch"
+			level = 3
+
+		# Register input, no limits here
+		[[quests.tutorial.input]]
+			displayname = "balls"
+			item = "minecraft:rotten_flesh"
+			amount = 10
+
+		# Register input, no limits here
+		[[quests.tutorial.output]]
+			item = "minecraft:diamond_pickaxe"
+			amount = 1
+			durability = 1000
+
+			# Should only enchant the stack that is higher
+			[quests.tutorial.output.enchanted]
+				enchant = "minecraft:sharpness"
+				level = 3
+
+		[[quests.tutorial.output]]
+			item = "minecraft:diamond_pickaxe"
+			amount = 1
+
