@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class Registry {
 
-    public static RegistryObject<? extends RegistryObject> load(String id, Class<? extends RegistryObject> type, ForgeConfigSpec.ConfigValue<Config> config) {
+    public static RegistryObject<? extends RegistryObject> loadObject(String id, Class<? extends RegistryObject> type, ForgeConfigSpec.ConfigValue<Config> config) {
 
         RegistryObject<? extends RegistryObject> obj;
         try {

@@ -14,6 +14,8 @@ public class ServerConfig {
     public static final ForgeConfigSpec.ConfigValue<Config> QUESTS;
     public static final ForgeConfigSpec.ConfigValue<Config> TRADES;
 
+    public static final ForgeConfigSpec.ConfigValue<Config> AREAS;
+
     public static final ForgeConfigSpec.ConfigValue<Integer> PERMISSION_LEVEL;
 
 
@@ -26,6 +28,8 @@ public class ServerConfig {
         QUESTS = BUILDER.define("quests", TomlFormat.newConfig(HashMap::new));
 
         TRADES = BUILDER.define("trades", TomlFormat.newConfig(HashMap::new));
+
+        AREAS = BUILDER.define("areas", TomlFormat.newConfig(HashMap::new));
 
         PERMISSION_LEVEL = BUILDER.define("commandPermission", 4);
 

@@ -7,7 +7,7 @@ commandPermission = 4
 		# Nametag added to the npc
 		displayname = "Tony"
 		# Quests/trades that the npc will have
-		quests = ["getting_started", "currency", "tutorial"]
+		quests = ["getting_started", "currency"]
 		# Quests that the player has to complete to be able to spawn this npc
 		required = []
 

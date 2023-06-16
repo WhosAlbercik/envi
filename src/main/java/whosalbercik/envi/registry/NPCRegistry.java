@@ -13,7 +13,7 @@ public final class NPCRegistry {
 
     public static void load() {
         for (String npcId: ServerConfig.NPCS.get().valueMap().keySet()) {
-            addNPC(npcId, (NPC) Registry.load(npcId, NPC.class, ServerConfig.NPCS));
+            addNPC(npcId, (NPC) Registry.loadObject(npcId, NPC.class, ServerConfig.NPCS));
         }
 
     }

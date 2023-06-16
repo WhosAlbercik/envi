@@ -12,7 +12,7 @@ public class TradeRegistry {
 
     public static void load() {
         for (String questId: ServerConfig.TRADES.get().valueMap().keySet()) {
-            addTrade(questId, (Trade) Registry.load(questId, Trade.class, ServerConfig.TRADES));
+            addTrade(questId, (Trade) Registry.loadObject(questId, Trade.class, ServerConfig.TRADES));
         }
 
     }

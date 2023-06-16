@@ -14,7 +14,7 @@ public class QuestRegistry {
 
     public static void load() {
         for (String questId: ServerConfig.QUESTS.get().valueMap().keySet()) {
-            addQuest(questId, (Quest) Registry.load(questId, Quest.class, ServerConfig.QUESTS));
+            addQuest(questId, (Quest) Registry.loadObject(questId, Quest.class, ServerConfig.QUESTS));
 
         }
 

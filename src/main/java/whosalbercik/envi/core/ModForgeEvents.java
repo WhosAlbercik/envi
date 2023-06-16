@@ -12,6 +12,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import whosalbercik.envi.ENVI;
+import whosalbercik.envi.commands.EnviReloadCommand;
+import whosalbercik.envi.commands.ResetUsagesCommand;
 import whosalbercik.envi.commands.SpawnCustomVillagerCommand;
 import whosalbercik.envi.gui.QuestMenu;
 import whosalbercik.envi.registry.obj.NPC;
@@ -73,6 +75,8 @@ public class ModForgeEvents {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event){
         SpawnCustomVillagerCommand.register(event.getDispatcher());
+        EnviReloadCommand.register(event.getDispatcher());
+        ResetUsagesCommand.register(event.getDispatcher());
     }
 
 

@@ -64,6 +64,12 @@ public class ModPacketHandler {
                 .consumerMainThread(OpenTradeS2CPacket::handle)
                 .add();
 
+        net.messageBuilder(ReloadS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ReloadS2CPacket::decode)
+                .encoder(ReloadS2CPacket::encode)
+                .consumerMainThread(ReloadS2CPacket::handle)
+                .add();
+
         INSTANCE = net;
     }
 
