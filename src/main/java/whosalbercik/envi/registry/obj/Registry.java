@@ -15,7 +15,7 @@ public class Registry {
             return null;
         }
 
-        if (obj.loadAttributesFromConfig()) {
+        if (obj.loadAttributesFromConfig(obj.getConfig().get(obj.getId()))) {
             return obj;
         } else {
             return null;

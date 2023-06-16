@@ -18,7 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
-import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteQuestCS2Packet;
 import whosalbercik.envi.networking.OpenBookS2CPacket;
@@ -48,10 +47,8 @@ public class Quest extends RegistryObject<Quest> {
 
 
 
-    protected boolean loadAttributesFromConfig() {
-        Config questData = ServerConfig.QUESTS.get().get(id);
-        if (questData == null) {
-            return false;}
+    protected boolean loadAttributesFromConfig(Config questData) {
+        if (questData == null) return false;
 
         this.title = questData.get("title");
         this.description = questData.get("description");
@@ -116,7 +113,7 @@ public class Quest extends RegistryObject<Quest> {
             output.add(outputStack);
         }
 
-        return id != null && title != null && description != null && input != null && output != null && icon != null && completeMessage != null && completeLimit != null;
+        return getId() != null && title != null && description != null && input != null && output != null && icon != null && completeMessage != null && completeLimit != null;
     }
 
     public ItemStack getBook() {
@@ -191,7 +188,7 @@ public class Quest extends RegistryObject<Quest> {
     }
 
     public void makeCurrent(@Nullable LocalPlayer p) {
-        ModPacketHandler.sendToServer(new SetQuestCS2Packet(id));
+        ModPacketHandler.sendToServer(new SetQuestCS2Packet(getId()));
     }
 
     public static void setQuestNone(@Nullable LocalPlayer p) {
@@ -199,7 +196,7 @@ public class Quest extends RegistryObject<Quest> {
     }
 
     public void complete(@Nullable LocalPlayer p) {
-        ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(id));
+        ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(getId()));
     }
 
     public ItemStack getIcon(ServerPlayer p) {
@@ -207,12 +204,12 @@ public class Quest extends RegistryObject<Quest> {
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
         stack.addTagElement("envi.type", StringTag.valueOf("quest"));
-        stack.addTagElement("envi.id", StringTag.valueOf(id));
+        stack.addTagElement("envi.id", StringTag.valueOf(getId()));
 
         MutableComponent name;
 
         // if quest is in progress
-        if (id.equals(p.getPersistentData().getString("envi.currentQuest"))) {
+        if (getId().equals(p.getPersistentData().getString("envi.currentQuest"))) {
             name = Component.translatable("[QUEST] " + title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#00d9fe")));
             stack.setHoverName(name);
         }
@@ -240,55 +237,73 @@ public class Quest extends RegistryObject<Quest> {
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
         stack.addTagElement("envi.type", StringTag.valueOf("quest"));
-        stack.addTagElement("envi.id", StringTag.valueOf(id));
+        stack.addTagElement("envi.id", StringTag.valueOf(getId()));
 
         return stack;
     }
 
     public void iconClicked(ServerPlayer p) {
         // if clicked quest that is in progress
-        if (p.getPersistentData().contains("envi.currentQuest") && p.getPersistentData().getString("envi.currentQuest").equals(id)) {
+        if (p.getPersistentData().contains("envi.currentQuest") && p.getPersistentData().getString("envi.currentQuest").equals(getId())) {
             p.closeContainer();
 
             // complete quest
             if (hasRequiredItems(p)) {
-                complete(null);
-                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.COMPLETE), p);
+                complete(p);
+                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.getId(), OpenBookS2CPacket.BookType.COMPLETE), p);
 
             } else {
-                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.INCOMPLETE), p);
+                ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.getId(), OpenBookS2CPacket.BookType.INCOMPLETE), p);
 
             }
-            return;
         }
         // set new Quest
         else {
             // limit achieved
-            if (completeLimit < p.getPersistentData().getInt("envi.questCount." + id)) {
+            if (completeLimit < p.getPersistentData().getInt("envi.questCount." + getId())) {
                 p.closeContainer();
                 p.sendSystemMessage(Component.literal("Max usages for this quest have been achieved!").withStyle(ChatFormatting.RED));
                 return;
             }
 
-
             p.closeContainer();
-            ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.id, OpenBookS2CPacket.BookType.DESCRIPTION), p);
+            ModPacketHandler.sendToPlayer(new OpenBookS2CPacket(this.getId(), OpenBookS2CPacket.BookType.DESCRIPTION), p);
 
-            p.getPersistentData().putString("envi.currentQuest", id);
+            p.getPersistentData().putString("envi.currentQuest", getId());
             return;
         }
 
     }
 
+    public void complete(ServerPlayer p) {
+        // remove input
+        this.getInput().forEach(input -> {
+            p.getInventory().clearOrCountMatchingItems((itemstack) -> input.getItem().equals(itemstack.getItem()), input.getCount(), p.getInventory());
+        });
+
+        // add output
+        this.getOutput().forEach(output -> p.getInventory().add(p.getInventory().getSlotWithRemainingSpace(output), output.copy()));
+
+        ListTag tag = p.getPersistentData().getList("envi.completedQuests", 9);
+
+        tag.add(StringTag.valueOf(getId()));
+
+        p.getPersistentData().put("envi.completedQuests", tag);
+        p.getPersistentData().putString("envi.currentQuest", "");
+
+
+        // add 1 to how many times quest completed
+        int playerCount = p.getPersistentData().getInt("envi.questCount." + this.getId());
+        playerCount++;
+
+        p.getPersistentData().putInt("envi.questCount." + this.getId(), playerCount);
+    }
     public Integer getCompleteLimit() {
         return completeLimit;
     }
 
     public String getTitle() {
         return title;
-    }
-    public String getId() {
-        return id;
     }
     public ArrayList<ItemStack> getInput() {
         return input;

@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
-import whosalbercik.envi.config.ServerConfig;
 import whosalbercik.envi.handlers.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteTradeCS2Packet;
 import whosalbercik.envi.networking.OpenTradeS2CPacket;
@@ -38,10 +37,10 @@ public class Trade extends Quest{
 
 
     @Override
-    protected boolean loadAttributesFromConfig() {
-        Config tradeData = ServerConfig.TRADES.get().get(id);
-        if (tradeData == null) {
-            return false;}
+    protected boolean loadAttributesFromConfig(Config tradeData) {
+
+        if (tradeData == null) return false;
+
 
         this.title = tradeData.get("title");
 
@@ -88,7 +87,7 @@ public class Trade extends Quest{
             output.add(outputStack);
         }
 
-        return id != null && title != null && input != null && output != null && icon != null && input.stream().count() <= 5 && output.stream().count() <= 5;
+        return getId() != null && title != null && input != null && output != null && icon != null && input.stream().count() <= 5 && output.stream().count() <= 5;
     }
 
     @Override
@@ -97,7 +96,7 @@ public class Trade extends Quest{
 
         stack.addTagElement("envi.gui", StringTag.valueOf("true"));
         stack.addTagElement("envi.type", StringTag.valueOf("trade"));
-        stack.addTagElement("envi.id", StringTag.valueOf(id));
+        stack.addTagElement("envi.id", StringTag.valueOf(getId()));
 
         stack.setHoverName(Component.translatable("[TRADE] " + title).withStyle(Style.EMPTY.withColor(TextColor.parseColor("#ff00fd"))));
 
@@ -108,13 +107,13 @@ public class Trade extends Quest{
     public void iconClicked(ServerPlayer p) {
 
         // limit achieved
-        if (completeLimit < p.getPersistentData().getInt("envi.questCount." + id) + 1 && completeLimit != -1) {
+        if (completeLimit < p.getPersistentData().getInt("envi.questCount." + getId()) + 1 && completeLimit != -1) {
             p.closeContainer();
             p.sendSystemMessage(Component.literal("Max usages for this quest have been achieved!").withStyle(ChatFormatting.RED));
             return;
         }
 
-        ModPacketHandler.sendToPlayer(new OpenTradeS2CPacket(this.id), p);
+        ModPacketHandler.sendToPlayer(new OpenTradeS2CPacket(this.getId()), p);
     }
 
     @Override
@@ -138,7 +137,7 @@ public class Trade extends Quest{
     }
 
     public void complete(@Nullable LocalPlayer p, int multiplier) {
-        ModPacketHandler.sendToServer(new CompleteTradeCS2Packet(id, multiplier));
+        ModPacketHandler.sendToServer(new CompleteTradeCS2Packet(getId(), multiplier));
     }
 
     public boolean hasRequiredItems(Player p, int multiplier) {

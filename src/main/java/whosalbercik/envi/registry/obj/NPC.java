@@ -11,7 +11,6 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
-import whosalbercik.envi.config.ServerConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,7 +84,7 @@ public class NPC extends RegistryObject<NPC> {
 
     private void addTagsFromAttributes(Villager mob) {
         mob.getPersistentData().putBoolean("envi.npc", true);
-        mob.getPersistentData().putString("envi.id", id);
+        mob.getPersistentData().putString("envi.id", getId());
         mob.getPersistentData().putString("envi.displayname", displayname);
 
         ListTag requiredQuestsTag = new ListTag();
@@ -106,24 +105,19 @@ public class NPC extends RegistryObject<NPC> {
 
     }
 
-    protected boolean loadAttributesFromConfig() {
-        Config data = ServerConfig.NPCS.get().get(id);
-        if (data == null) {
-            return false;}
+    protected boolean loadAttributesFromConfig(Config data) {
+        if (data == null) return false;
 
         this.requiredQuests = data.get("required");
         this.quests = data.get("quests");
         this.displayname = data.get("displayname");
 
-        return id != null && requiredQuests != null && displayname != null && quests != null;
+        return getId() != null && requiredQuests != null && displayname != null && quests != null;
     }
 
 
     public String getDisplayname() {
         return displayname;
-    }
-    public String getId() {
-        return id;
     }
     public ArrayList<String> getRequiredQuests() {
         return requiredQuests;

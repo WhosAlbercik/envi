@@ -4,7 +4,8 @@ plugins {
 
 
 group = 'whosalbercik'
-version = '1.19.3-0.1.1.8'
+version = '1.19.3-0.1.1.9'
+// MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH
 
 java {
     archivesBaseName = 'envi'

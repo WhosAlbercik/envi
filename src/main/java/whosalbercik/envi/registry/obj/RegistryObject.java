@@ -6,15 +6,15 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public abstract class RegistryObject<T extends RegistryObject> {
 
-    protected final String id;
-    protected final Class<T> type;
-    protected final ForgeConfigSpec.ConfigValue<Config> config;
+    private final String id;
+    private final Class<T> type;
+    private final Config config;
 
     // CONSTRUCTOR MUST MATCH THE ONE IN ~REGISTRY~
     protected RegistryObject(String id, Class<T> type, ForgeConfigSpec.ConfigValue<Config> config) {
         this.id = id;
         this.type = type;
-        this.config = config;
+        this.config = config.get();
     }
 
     public String getId() {
@@ -25,11 +25,11 @@ public abstract class RegistryObject<T extends RegistryObject> {
         return type;
     }
 
-    public ForgeConfigSpec.ConfigValue<Config> getConfig() {
+    protected Config getConfig() {
         return config;
     }
 
 
 
-    protected abstract boolean loadAttributesFromConfig();
+    protected abstract boolean loadAttributesFromConfig(Config config);
 }

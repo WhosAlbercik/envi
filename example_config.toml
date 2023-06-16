@@ -62,7 +62,7 @@ commandPermission = 4
 		completeMessage = "Thanks"
 		# icon of the trade, shows in gui
 		icon = "minecraft:diamond_sword"
-		# how many times can quest be compeleted, counts per player
+		# how many times can quest be completed, counts per player
 		completeLimit = 5
 
 		# The icon can be enchanted
@@ -72,7 +72,6 @@ commandPermission = 4
 
 		# Register input, no limits here
 		[[quests.getting_started.input]]
-			displayname = "balls"
 			item = "minecraft:rotten_flesh"
 			amount = 10
 
@@ -111,7 +110,6 @@ commandPermission = 4
 
 		# Register input, no limits here
 		[[quests.tutorial.input]]
-			displayname = "balls"
 			item = "minecraft:rotten_flesh"
 			amount = 10
 
