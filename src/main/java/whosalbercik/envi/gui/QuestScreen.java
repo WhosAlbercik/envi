@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.AirItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.core.ModPacketHandler;
 import whosalbercik.envi.networking.QuestClickedCS2Packet;
 import whosalbercik.envi.registry.obj.Quest;
 import whosalbercik.envi.registry.QuestRegistry;

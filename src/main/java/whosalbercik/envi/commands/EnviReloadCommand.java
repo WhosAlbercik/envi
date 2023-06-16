@@ -6,8 +6,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.core.ModPacketHandler;
 import whosalbercik.envi.networking.ReloadS2CPacket;
+import whosalbercik.envi.registry.AreaRegistry;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
 import whosalbercik.envi.registry.TradeRegistry;
@@ -22,6 +23,7 @@ public class EnviReloadCommand {
         QuestRegistry.load();
         NPCRegistry.load();
         TradeRegistry.load();
+        AreaRegistry.load();
 
         ModPacketHandler.sendToPlayer(new ReloadS2CPacket(), ctx.getSource().getPlayer());
 

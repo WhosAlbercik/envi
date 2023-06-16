@@ -1,4 +1,4 @@
-package whosalbercik.envi.handlers;
+package whosalbercik.envi.core;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

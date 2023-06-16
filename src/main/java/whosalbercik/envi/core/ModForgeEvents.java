@@ -1,6 +1,8 @@
 package whosalbercik.envi.core;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -9,13 +11,17 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import whosalbercik.envi.ENVI;
 import whosalbercik.envi.commands.EnviReloadCommand;
 import whosalbercik.envi.commands.ResetUsagesCommand;
 import whosalbercik.envi.commands.SpawnCustomVillagerCommand;
 import whosalbercik.envi.gui.QuestMenu;
+import whosalbercik.envi.registry.AreaRegistry;
+import whosalbercik.envi.registry.obj.Area;
 import whosalbercik.envi.registry.obj.NPC;
 import whosalbercik.envi.registry.obj.Quest;
 import whosalbercik.envi.registry.NPCRegistry;
@@ -69,7 +75,47 @@ public class ModForgeEvents {
 
     @SubscribeEvent
     public static void playerTick(TickEvent.PlayerTickEvent event) {
-        return;
+        for (Area area: AreaRegistry.getAreas()) {
+            if (event.side == LogicalSide.SERVER && area.isInArea(event.player.blockPosition()) && !area.canEnter((ServerPlayer) event.player)) {
+                event.player.moveTo(area.getTeleportTo().get().getCenter());
+
+                if (area.getEntering() == Area.Entering.AFTERQUEST) {
+                    event.player.sendSystemMessage(Component.literal("Complete " + area.getUnlockQuest().get().getTitle() + " To access this area").withStyle(ChatFormatting.RED));
+                } else {
+                    event.player.sendSystemMessage(Component.literal("Cannot access this area!").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void breakBlock(BlockEvent.BreakEvent event) {
+        for (Area area: AreaRegistry.getAreas()) {
+            if (!event.getLevel().isClientSide() && area.isInArea(event.getPos()) && !area.canBreak((ServerPlayer) event.getPlayer())) {
+                event.setCanceled(true);
+
+                if (area.getBreaking() == Area.Breaking.AFTERQUEST) {
+                    event.getPlayer().sendSystemMessage(Component.literal("Complete " + area.getUnlockQuest().get().getTitle() + " To break blocks").withStyle(ChatFormatting.RED));
+                } else {
+                    event.getPlayer().sendSystemMessage(Component.literal("Cannot break blocks in this area!").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void placeBlock(BlockEvent.EntityPlaceEvent event) {
+        for (Area area: AreaRegistry.getAreas()) {
+            if (event.getEntity() instanceof ServerPlayer && area.isInArea(event.getPos()) && !area.canPlace((ServerPlayer) event.getEntity())) {
+                event.setCanceled(true);
+
+                if (area.getPlacing() == Area.Placing.AFTERQUEST) {
+                    event.getEntity().sendSystemMessage(Component.literal("Complete " + area.getUnlockQuest().get().getTitle() + " To place blocks").withStyle(ChatFormatting.RED));
+                } else {
+                    event.getEntity().sendSystemMessage(Component.literal("Cannot place blocks in this area!").withStyle(ChatFormatting.RED));
+                }
+            }
+        }
     }
 
     @SubscribeEvent

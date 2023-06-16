@@ -18,7 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.core.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteQuestCS2Packet;
 import whosalbercik.envi.networking.OpenBookS2CPacket;
 import whosalbercik.envi.networking.SetQuestCS2Packet;
@@ -195,6 +195,10 @@ public class Quest extends RegistryObject<Quest> {
         ModPacketHandler.sendToServer(new SetQuestCS2Packet(""));
     }
 
+    public boolean isCompletedBy(ServerPlayer p) {
+        return p.getPersistentData().getList("envi.completedQuests", 8).contains(StringTag.valueOf(getId()));
+    }
+
     public void complete(@Nullable LocalPlayer p) {
         ModPacketHandler.sendToServer(new CompleteQuestCS2Packet(getId()));
     }
@@ -284,7 +288,7 @@ public class Quest extends RegistryObject<Quest> {
         // add output
         this.getOutput().forEach(output -> p.getInventory().add(p.getInventory().getSlotWithRemainingSpace(output), output.copy()));
 
-        ListTag tag = p.getPersistentData().getList("envi.completedQuests", 9);
+        ListTag tag = p.getPersistentData().getList("envi.completedQuests", 8);
 
         tag.add(StringTag.valueOf(getId()));
 

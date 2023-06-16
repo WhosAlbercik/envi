@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import whosalbercik.envi.gui.QuestScreen;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.registry.AreaRegistry;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
 import whosalbercik.envi.registry.TradeRegistry;
@@ -30,6 +30,7 @@ public class ClientModEvents {
         NPCRegistry.load();
         QuestRegistry.load();
         TradeRegistry.load();
+        AreaRegistry.load();
         ModPacketHandler.register();
 
     }

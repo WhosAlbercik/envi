@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.core.ModPacketHandler;
 import whosalbercik.envi.networking.CompleteTradeCS2Packet;
 import whosalbercik.envi.networking.OpenTradeS2CPacket;
 
@@ -87,7 +87,7 @@ public class Trade extends Quest{
             output.add(outputStack);
         }
 
-        return getId() != null && title != null && input != null && output != null && icon != null && input.stream().count() <= 5 && output.stream().count() <= 5;
+        return getId() != null && title != null && input != null && output != null && icon != null && input.size() <= 5 && output.size() <= 5;
     }
 
     @Override

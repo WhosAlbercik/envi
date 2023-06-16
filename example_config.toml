@@ -128,3 +128,13 @@ commandPermission = 4
 			item = "minecraft:diamond_pickaxe"
 			amount = 1
 
+[areas]
+
+	[areas.level] # define a new area
+		starting = "-20,69,-30" # position where area starts, lowest x & lowest z, y doesnt matter
+		ending = "-16,69,-26" # position where area ends, highes x & highest z, y doesnt matter
+		breaking = "UNBREAKABLE" # define when and if player can break blocks, UNBREAKABLE BREAKABLE AFTERQUEST
+		entering = "AFTERQUEST" # define when and if player can enter area, UNBREAKABLE BREAKABLE AFTERQUEST
+		placing = "UNPLACABLE" # define when and if player can place blocks, UNBREAKABLE BREAKABLE AFTERQUEST
+		unlockQuest = "tutorial" # define what quest unlocks breaking, entering or placing, if set to AFTERQUEST
+		teleportTo = "-18,69,-25" # where to teleport when player enters a locked area

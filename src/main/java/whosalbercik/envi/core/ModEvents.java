@@ -4,7 +4,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import whosalbercik.envi.handlers.ModPacketHandler;
+import whosalbercik.envi.registry.AreaRegistry;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
 import whosalbercik.envi.registry.TradeRegistry;
@@ -16,6 +16,7 @@ public class ModEvents {
         NPCRegistry.load();
         QuestRegistry.load();
         TradeRegistry.load();
+        AreaRegistry.load();
         ModPacketHandler.register();
 
     }

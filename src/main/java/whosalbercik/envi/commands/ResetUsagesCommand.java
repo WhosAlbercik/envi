@@ -7,6 +7,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import whosalbercik.envi.registry.QuestRegistry;
@@ -29,6 +31,10 @@ public class ResetUsagesCommand {
 
         for (ServerPlayer p: players) {
             p.getPersistentData().putInt("envi.questCount." + quest.getId(), 0);
+
+            ListTag tag = p.getPersistentData().getList("envi.completedQuests", 8);
+            tag.remove(StringTag.valueOf(quest.getId()));
+            p.getPersistentData().put("envi.completedQuests", tag);
         }
 
         ctx.getSource().sendSuccess(Component.literal("Successfully reset usages for quest " + quest.getId()).withStyle(ChatFormatting.AQUA), true);

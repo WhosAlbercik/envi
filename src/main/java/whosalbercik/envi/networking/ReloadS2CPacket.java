@@ -3,6 +3,7 @@ package whosalbercik.envi.networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
+import whosalbercik.envi.registry.AreaRegistry;
 import whosalbercik.envi.registry.NPCRegistry;
 import whosalbercik.envi.registry.QuestRegistry;
 import whosalbercik.envi.registry.TradeRegistry;
@@ -32,6 +33,7 @@ public class ReloadS2CPacket {
                     QuestRegistry.load();
                     NPCRegistry.load();
                     TradeRegistry.load();
+                    AreaRegistry.load();
                 }
             });
 

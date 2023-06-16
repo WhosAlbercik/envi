@@ -12,6 +12,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import org.slf4j.Logger;
 import whosalbercik.envi.config.ServerConfig;
+import whosalbercik.envi.core.ModItems;
 import whosalbercik.envi.core.ModMenus;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -29,6 +30,7 @@ public class ENVI {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfig.SPEC, "envi-common.toml");
 
+        ModItems.ITEMS.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
 
     }
